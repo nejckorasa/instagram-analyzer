@@ -68,6 +68,8 @@ As of now installation is not very user friendly, you need to download [insta_lo
 $ python insta_location_analyzer.py
 ````
 
+Before you run it, see [Configuration & Options](https://github.com/nejckorasa/instagram-analyzer/blob/master/README.md#configuration--options)
+
 
 Configuration & Options
 -------
