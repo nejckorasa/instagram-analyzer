@@ -76,11 +76,11 @@ Configuration & Options
 
 #### Acquire Instagram Access Token
 
-Go to [Pixelunion](http://instagram.pixelunion.net/), don't forget the token!
+Go to [Pixelunion](http://instagram.pixelunion.net/), generate token, don't forget the token!
 
 #### Acquire Location IQ Access Token
 
-Go to [Location IQ](https://locationiq.com/), don't forget the token!
+Go to [Location IQ](https://locationiq.com/), sign up, don't forget the token!
 
 #### Paste tokens inside main method 
 
