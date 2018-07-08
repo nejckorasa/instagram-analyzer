@@ -156,6 +156,8 @@ When script is executed for [nejckorasa](https://www.instagram.com/nejckorasa) d
     ]
   }
 ```
+Of course, `<post_id>` will be an actual post ID.
+
 Data for cities is almost the same. For specific location one location item looks like this:
 
 ````Json
