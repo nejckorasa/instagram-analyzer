@@ -62,7 +62,7 @@ Script prints similar table for specific locations and cities.
 Install & Usage
 -------
 
-As of now installation is not very user friendly, you need to download `insta_location_analyzer.py` and run it as:
+As of now installation is not very user friendly, you need to download [insta_location_analyzer.py](insta_location_analyzer.py) and run it as:
 
 ````
 $ python insta_location_analyzer.py
