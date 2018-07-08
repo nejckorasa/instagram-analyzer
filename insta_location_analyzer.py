@@ -31,7 +31,6 @@ def load_insta_media():
 
     print('Loading Instagram media [', end='', flush=True)
 
-    # TODO need global?
     next_max_id: str = None
     next_page: bool = True
 
