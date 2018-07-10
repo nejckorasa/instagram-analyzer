@@ -1,7 +1,9 @@
 <img src="https://github.com/nejckorasa/instagram-analyzer/blob/master/instagram-logo.png?raw=true" align="right">
 
-Instagram Analyzer [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Analyze%20Instagram%20location%20tags%20to%20se%20what%20cities%2C%20countries%20you%20visited&url=https://github.com/nejckorasa/instagram-analyzer&via=github&hashtags=python,instagram,instagramapi,location,reversegeocoding,geocoding,github,geotagging,developers)
+Instagram Analyzer
 =================
+
+[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Analyze%20Instagram%20location%20tags%20to%20se%20what%20cities%2C%20countries%20you%20visited&url=https://github.com/nejckorasa/instagram-analyzer&via=github&hashtags=python,instagram,location,geocoding,github,geotagging,developers)
 
 instagram-analyzer is an application written in Python that analyzes geotags using reverse geocoding in user's Instagram photos and videos. 
 
