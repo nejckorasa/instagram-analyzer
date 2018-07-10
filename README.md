@@ -1,27 +1,30 @@
 <img src="https://github.com/nejckorasa/instagram-analyzer/blob/master/instagram-logo.png?raw=true" align="right">
 
-Instagram Analyzer [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Analyze%20Instagram%20location%20tags%20to%20se%20what%20cities%2C%20countries%20you%20visited&url=https://github.com/nejckorasa/instagram-analyzer&via=github&hashtags=python,instagram,instagramapi,location,reversegeocoding,geocoding,github,developers)
+Instagram Analyzer [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Analyze%20Instagram%20location%20tags%20to%20se%20what%20cities%2C%20countries%20you%20visited&url=https://github.com/nejckorasa/instagram-analyzer&via=github&hashtags=python,instagram,instagramapi,location,reversegeocoding,geocoding,github,geotagging,developers)
 =================
 
-instagram-analyzer is a script (application) written in Python that analyzes geotags using reverse geocoding in user's instagram photos and videos. Use responsibly.
+instagram-analyzer is an application written in Python that analyzes geotags using reverse geocoding in user's Instagram photos and videos. 
 
+It provides the data of specific locations, countries and cities you've visited so far, as well as how many times and which Instagram posts match the location.
+
+Use responsibly.
 
 What it does
 -------
 
-### Store all instagram media data
+### :round_pushpin: Store all instagram media data :camera:
 
 Script loads all user's instagram media and saves it in JSON format to `insta_media_data.json`. This data includes all media metadata, including likes, location, tagged users, comments, image url-s ...
 
-### Store all instagram location data
+### :round_pushpin: Store all instagram location data :bar_chart:
 
 Script analyzes geotags and saves locations in JSON format to `insta_locations_data.json`. This data includes occurrence for each location as well as image and instagram media url-s ...
 
-### Store all instagram countries and cities location data
+### :round_pushpin: Store all instagram countries and cities location data :open_file_folder:
 
-Countries and cities are additionally analyzed using reverse geocoding with [Location IQ API]. Data is saved in `insta_countires_data.json` and `insta_cities_data.json` files.
+Countries and cities are additionally analyzed using reverse geocoding with [Location IQ API](https://locationiq.com). Data is saved in `insta_countires_data.json` and `insta_cities_data.json` files.
 
-### Prints occurrences for location, country and city
+### :round_pushpin: Prints occurrences for location, country and city :airplane:
 
 ````
 You have visited 99 different locations
@@ -29,7 +32,7 @@ You have visited 7  different countries
 You have visited 32 different cities
 ````
 
-### Print table view of most visited location, countries and cities
+### :round_pushpin: Print table view of most visited location, countries and cities :earth_africa:
 
 For example, when script is executed for [nejckorasa](https://www.instagram.com/nejckorasa) print for countries looks like this:
 
@@ -80,7 +83,7 @@ Go to [Pixelunion](http://instagram.pixelunion.net/), generate token, don't forg
 
 #### Acquire Location IQ Access Token
 
-Go to [Location IQ](https://locationiq.com/), sign up, don't forget the token!
+Go to [Location IQ](https://locationiq.com/), sign up, get the token, don't forget the token!
 
 #### Paste tokens inside main method 
 
