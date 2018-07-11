@@ -11,7 +11,7 @@ INSTA_MEDIA_URI: str = 'https://api.instagram.com/v1/users/self/media/recent'
 
 INSTA_MEDIA_JSON_FILE_NAME = './insta_media_data.json'
 INSTA_LOCATIONS_JSON_FILE_NAME = './insta_locations_data.json'
-INSTA_COUNTIRES_JSON_FILE_NAME = './insta_countires_data.json'
+INSTA_COUNTRIES_JSON_FILE_NAME = './insta_countries_data.json'
 INSTA_CITIES_JSON_FILE_NAME = './insta_cities_data.json'
 
 # Geo constants
@@ -41,7 +41,7 @@ def load_insta_media():
         next_page = media['next_page']
         print("#", end="", flush=True)
 
-    print ('] [DONE] - Media items size: ', len(insta_media_data))
+    print('] [DONE] - Media items size: ', len(insta_media_data))
 
 
 def read_insta_media():
@@ -60,7 +60,7 @@ def store_insta_media():
     print('Saving media data to file ', end='', flush=True)
     with open(INSTA_MEDIA_JSON_FILE_NAME, "wb") as f:
         f.write(json.dumps(insta_media_data).encode("utf-8"))
-    print ('[DONE]')
+    print('[DONE]')
 
 
 def get_recent_media(next_max_id: str = None):
@@ -75,9 +75,9 @@ def get_recent_media(next_max_id: str = None):
     response: dict = requests.get(INSTA_MEDIA_URI, params=payload).json()
 
     if 'code' in response and response['code'] != 200:
-        raise ValueError("Error while calling Instagram API, error_type: " 
-            + response['error_type'] + ", message: " 
-            + response['error_message'])
+        raise ValueError("Error while calling Instagram API, error_type: "
+                         + response['error_type'] + ", message: "
+                         + response['error_message'])
 
     for item in response['data']:
         insta_media_data[item['id']] = item
@@ -123,7 +123,7 @@ def analyze_locations():
 
     if ANALYZE_COUNTRIES:
         
-        print('Loading country data (should take about', len(locations) , 'seconds) [', end='', flush=True)
+        print('Loading country data (should take about', len(locations), 'seconds) [', end='', flush=True)
         for key in locations:
 
             location = locations[key]
@@ -183,7 +183,7 @@ def store_locations_data(locations, countries, cities):
     with open(INSTA_LOCATIONS_JSON_FILE_NAME, "wb") as f:
         f.write(json.dumps(locations).encode("utf-8"))
 
-    with open(INSTA_COUNTIRES_JSON_FILE_NAME, "wb") as f:
+    with open(INSTA_COUNTRIES_JSON_FILE_NAME, "wb") as f:
         f.write(json.dumps(countries).encode("utf-8"))
 
     with open(INSTA_CITIES_JSON_FILE_NAME, "wb") as f:
@@ -191,9 +191,6 @@ def store_locations_data(locations, countries, cities):
 
 
 def print_locations_data(locations, countries, cities):
-    
-    rank: int = 1
-
     # Sort by occurrences
     sorted_locations = sorted(locations.items(), key=lambda i: i[1]['count'], reverse=True)
     sorted_countries = sorted(countries.items(), key=lambda i: i[1]['count'], reverse=True)
@@ -209,7 +206,7 @@ def print_locations_data(locations, countries, cities):
     locations_table.column_headers = ['rank', 'location', 'occurrences']
     locations_table.column_alignments['location'] = BeautifulTable.ALIGN_LEFT
     
-    rank = 1
+    rank: int = 1
     for location in sorted_locations:
         locations_table.append_row([rank, location[1]['name'], location[1]['count']])
         rank += 1
