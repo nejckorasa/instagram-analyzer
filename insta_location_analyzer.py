@@ -4,7 +4,7 @@ import os.path
 import time
 from beautifultable import BeautifulTable
 
-# Insta constans
+# Insta constants
 
 INSTA_TOKEN: str = None
 INSTA_MEDIA_URI: str = 'https://api.instagram.com/v1/users/self/media/recent'
@@ -14,7 +14,7 @@ INSTA_LOCATIONS_JSON_FILE_NAME = './insta_locations_data.json'
 INSTA_COUNTIRES_JSON_FILE_NAME = './insta_countires_data.json'
 INSTA_CITIES_JSON_FILE_NAME = './insta_cities_data.json'
 
-# Geo constans
+# Geo constants
 
 LOCATION_IQ_TOKEN: str = None
 LOCATION_IQ_URI: str = 'https://us1.locationiq.org/v1/reverse.php'
@@ -26,6 +26,7 @@ ANALYZE_COUNTRIES = False
 # Data
 
 insta_media_data: dict = {}
+
 
 def load_insta_media():
 
@@ -285,6 +286,7 @@ def analyze(insta_token, location_iq_token, read_media_from_file=False, analyze=
 
     if analyze:
         analyze_locations()
+
 
 def main():
 
