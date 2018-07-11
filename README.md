@@ -3,7 +3,8 @@
 Instagram Analyzer
 =================
 
-[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Analyze%20Instagram%20location%20tags%20to%20se%20what%20cities%2C%20countries%20you%20visited&url=https://github.com/nejckorasa/instagram-analyzer&via=github&hashtags=python,instagram,location,geocoding,github,geotagging,developers)
+![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)
+ [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Analyze%20Instagram%20location%20tags%20to%20se%20what%20cities%2C%20countries%20you%20visited&url=https://github.com/nejckorasa/instagram-analyzer&via=github&hashtags=python,instagram,location,geocoding,github,geotagging,developers)
 
 instagram-analyzer is an application written in Python that analyzes geotags using reverse geocoding in user's Instagram photos and videos. 
 
@@ -24,7 +25,7 @@ Script analyzes geotags and saves locations in JSON format to `insta_locations_d
 
 ### :round_pushpin: Store all instagram countries and cities location data :open_file_folder:
 
-Countries and cities are additionally analyzed using reverse geocoding with [Location IQ API](https://locationiq.com). Data is saved in `insta_countires_data.json` and `insta_cities_data.json` files.
+Countries and cities are additionally analyzed using reverse geocoding with [LocationIQ API](https://locationiq.com). Data is saved in `insta_countires_data.json` and `insta_cities_data.json` files.
 
 ### :round_pushpin: Prints occurrences for location, country and city :airplane:
 
@@ -72,6 +73,12 @@ As of now installation is not very user friendly, you need to download [insta_lo
 ````
 $ python insta_location_analyzer.py
 ````
+
+To install all required dependencies run:
+
+```
+$ pip install -r requirenments.txt
+```
 
 Before you run it, see [Configuration & Options](https://github.com/nejckorasa/instagram-analyzer/blob/master/README.md#configuration--options)
 
