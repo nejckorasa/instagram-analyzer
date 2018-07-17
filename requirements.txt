@@ -1,2 +1,2 @@
-beautifultable
-requests
+beautifultable >= 0.5.2
+requests >= 2.19.1
