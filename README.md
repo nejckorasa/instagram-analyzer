@@ -17,11 +17,11 @@ What it does
 
 ### :round_pushpin: Store all instagram media data :camera:
 
-Script loads all user's instagram media and saves it in JSON format to `insta_media_data.json`. This data includes all media metadata, including likes, location, tagged users, comments, image url-s ...
+Application loads all user's instagram media and saves it in JSON format to `insta_media_data.json`. This data includes all media metadata, including likes, location, tagged users, comments, image url-s ...
 
 ### :round_pushpin: Store all instagram location data :bar_chart:
 
-Script analyzes geotags and saves locations in JSON format to `insta_locations_data.json`. This data includes occurrence for each location as well as image and instagram media url-s ...
+Analyzes geotags and saves locations in JSON format to `insta_locations_data.json`. This data includes occurrence for each location as well as image and instagram media url-s ...
 
 ### :round_pushpin: Store all instagram countries and cities location data :open_file_folder:
 
@@ -37,7 +37,7 @@ You have visited 32 different cities
 
 ### :round_pushpin: Print table view of most visited location, countries and cities :earth_africa:
 
-For example, when script is executed for [nejckorasa](https://www.instagram.com/nejckorasa) print for countries looks like this:
+For example, when executed for [nejckorasa](https://www.instagram.com/nejckorasa) print for countries looks like this:
 
 ````
 Countries: 
@@ -62,7 +62,7 @@ Countries:
 
 ````
 
-Script prints similar table for specific locations and cities.
+Similar tables are printed for specific locations and cities.
 
 
 Install
