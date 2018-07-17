@@ -70,13 +70,13 @@ Install & Usage
 
 As of now installation is not very user friendly, you need to download [insta_location_analyzer.py](insta_location_analyzer.py) and run it as:
 
-````
+````bash
 $ python insta_location_analyzer.py
 ````
 
 To install all required dependencies run:
 
-```
+```bash
 $ pip install -r requirenments.txt
 ```
 
@@ -86,29 +86,58 @@ Before you run it, see [Configuration & Options](https://github.com/nejckorasa/i
 Configuration & Options
 -------
 
-#### Acquire Instagram Access Token
+### Acquire Tokens
+
+##### Acquire Instagram Access Token
 
 Go to [Pixelunion](http://instagram.pixelunion.net/), generate token, don't forget the token!
 
-#### Acquire Location IQ Access Token
+##### Acquire Location IQ Access Token
 
 Go to [Location IQ](https://locationiq.com/), sign up, get the token, don't forget the token!
 
-#### Paste tokens inside main method 
+##### Paste tokens inside main method 
 
-See the `main()` method:
+Create `InstaAnalyzer` instance with token values. See the `main()` method:
 
-```Pyhton
+```Python
 def main():
-
-    analyze(
-        insta_token='<INSTA_TOKEN_HERE>', 
-        location_iq_token='<LOCATION_IQ_TOKEN_HERE>', 
-        read_media_from_file=False, 
-        countries=True)
+    analyzer = InstaAnalyzer(
+        insta_token='<INSTAGRAM_TOKEN_HERE>',
+        location_iq_token='<LOCATION_IQ_TOKEN_HERE>')
+    analyzer.read_media_from_file = False
+    analyzer.run()
 ```
 
-> Once instagram media data is stored in JSON, you can read it from there, instead of loading it again via Instagram API (API is limited to 200 request per hour). Set `read_media_from_file=True`
+> Once instagram media data is stored in JSON, you can read it from there, instead of loading it again via Instagram API (API is limited to 200 request per hour). Set `analyzer.read_media_from_file = True`
+
+
+### Options
+
+- `location_iq_token` is optional. If not set only basic location analysis will be run and saved to file.
+- Once `InstaAnalyzer` has been run all data is available to access:
+
+```Python
+# Configure InstaAnalyzer
+analyzer = InstaAnalyzer(
+    insta_token='<INSTAGRAM_TOKEN_HERE>',
+    location_iq_token='<LOCATION_IQ_TOKEN_HER
+    
+# Run InstaAnalyzer    
+analyzer.run()
+
+# Access cities, countries and location data
+cities = analyzer.cities
+countires = analyzer.cities
+locations = analyzer.cities
+
+# Access instagram media data
+instagram_media = analyzer.insta_media_data
+
+# Print locations later
+analyzer.print_locations()
+```
+    
 
 
 Stored data examples
