@@ -154,7 +154,7 @@ analyzer.print_locations()
 Stored data examples
 -------
 
-When script is executed for [nejckorasa](https://www.instagram.com/nejckorasa) data for one country item (Spain) looks like this:
+When executed for [nejckorasa](https://www.instagram.com/nejckorasa) data for one country item (Spain) looks like this:
 
 ```Json
 "Spain": {
