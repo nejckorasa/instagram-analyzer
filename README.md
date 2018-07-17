@@ -139,8 +139,8 @@ analyzer.run()
 
 # Access cities, countries and location data
 cities = analyzer.cities
-countires = analyzer.cities
-locations = analyzer.cities
+countires = analyzer.countires
+locations = analyzer.locations
 
 # Access instagram media data
 instagram_media = analyzer.insta_media_data
