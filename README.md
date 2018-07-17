@@ -1,4 +1,4 @@
-<img src="https://github.com/nejckorasa/instagram-analyzer/blob/master/instagram-logo.png?raw=true" align="right">
+<img src="https://raw.githubusercontent.com/nejckorasa/instagram-analyzer/master/presentation/instagram-logo.png?raw=true" align="right">
 
 Instagram Analyzer
 =================
