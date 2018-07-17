@@ -3,7 +3,7 @@
 Instagram Analyzer
 =================
 
-![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)
+[![PyPI](https://img.shields.io/pypi/v/instagram-analyzer.svg)](https://pypi.org/project/instagram-analyzer/) ![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)
  [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Analyze%20Instagram%20location%20tags%20to%20se%20what%20cities%2C%20countries%20you%20visited&url=https://github.com/nejckorasa/instagram-analyzer&via=github&hashtags=python,instagram,location,geocoding,github,geotagging,developers)
 
 instagram-analyzer is an application written in Python that analyzes geotags using reverse geocoding in user's Instagram photos and videos. 
@@ -65,20 +65,32 @@ Countries:
 Script prints similar table for specific locations and cities.
 
 
-Install & Usage
+Install
 -------
 
-As of now installation is not very user friendly, you need to download [insta_location_analyzer.py](insta_location_analyzer.py) and run it as:
-
-````bash
-$ python insta_location_analyzer.py
-````
-
-To install all required dependencies run:
-
+To install instagram-analyzer:
 ```bash
-$ pip install -r requirenments.txt
+$ pip install instagram-analyzer
 ```
+
+To update instagram-analyzer:
+```bash
+$ pip install instagram-analyzer --upgrade
+```
+
+Usage
+-------
+
+Once installed, import it, configure it and run it:
+
+```Python
+from instagram_analyzer import InstaAnalyzer
+
+InstaAnalyzer(
+    insta_token='<INSTAGRAM_TOKEN_HERE>',
+    location_iq_token='<LOCATION_IQ_TOKEN_HERE>').run()
+```
+
 
 Before you run it, see [Configuration & Options](https://github.com/nejckorasa/instagram-analyzer/blob/master/README.md#configuration--options)
 
@@ -96,17 +108,16 @@ Go to [Pixelunion](http://instagram.pixelunion.net/), generate token, don't forg
 
 Go to [Location IQ](https://locationiq.com/), sign up, get the token, don't forget the token!
 
-##### Paste tokens inside main method 
+### Configure and run
 
-Create `InstaAnalyzer` instance with token values. See the `main()` method:
+Create `InstaAnalyzer` instance with token values.
 
 ```Python
-def main():
-    analyzer = InstaAnalyzer(
-        insta_token='<INSTAGRAM_TOKEN_HERE>',
-        location_iq_token='<LOCATION_IQ_TOKEN_HERE>')
-    analyzer.read_media_from_file = False
-    analyzer.run()
+analyzer = InstaAnalyzer(
+    insta_token='<INSTAGRAM_TOKEN_HERE>',
+    location_iq_token='<LOCATION_IQ_TOKEN_HERE>')
+analyzer.read_media_from_file = False
+analyzer.run()
 ```
 
 > Once instagram media data is stored in JSON, you can read it from there, instead of loading it again via Instagram API (API is limited to 200 request per hour). Set `analyzer.read_media_from_file = True`
@@ -121,7 +132,7 @@ def main():
 # Configure InstaAnalyzer
 analyzer = InstaAnalyzer(
     insta_token='<INSTAGRAM_TOKEN_HERE>',
-    location_iq_token='<LOCATION_IQ_TOKEN_HER
+    location_iq_token='<LOCATION_IQ_TOKEN_HERE>')
     
 # Run InstaAnalyzer    
 analyzer.run()

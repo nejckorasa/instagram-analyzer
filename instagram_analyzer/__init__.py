@@ -1,0 +1,1 @@
+from instagram_analyzer.app import InstaAnalyzer

@@ -1,0 +1,9 @@
+venv
+*.egg-info
+*.log
+.eggs
+build
+dist
+.idea
+README.rst
+*.sh

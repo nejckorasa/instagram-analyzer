@@ -17,7 +17,7 @@ INSTA_COUNTRIES_JSON_FILE_NAME = './insta_countries_data.json'
 INSTA_CITIES_JSON_FILE_NAME = './insta_cities_data.json'
 
 
-class InstaAnalyzer:
+class InstaAnalyzer(object):
 
     def __init__(self, insta_token: str, location_iq_token: str = None):
         self._insta_token = insta_token
