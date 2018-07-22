@@ -279,3 +279,9 @@ FAQ
 #### Why does it take so long to load additional location data?
 
 For reverse geocoding, Location IQ API is used. Free version of that API si rate limited to 1 request per second. That is why additional data loading takes `<different_location_count>` seconds.
+
+
+Contributing
+-------
+
+Pull requests are welcome, [Show your ❤ with a ★](https://github.com/nejckorasa/instagram-analyzer/stargazers)
