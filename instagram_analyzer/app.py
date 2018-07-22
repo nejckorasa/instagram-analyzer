@@ -2,9 +2,10 @@ import requests
 import json
 import os.path
 import time
+from typing import NoReturn
 from beautifultable import BeautifulTable
 
-# Tokens
+# URIs
 
 INSTA_MEDIA_URI: str = 'https://api.instagram.com/v1/users/self/media/recent'
 LOCATION_IQ_URI: str = 'https://us1.locationiq.org/v1/reverse.php'
@@ -106,7 +107,7 @@ class InstaAnalyzer(object):
         self.print_locations()
 
 
-def load_insta_media(insta_token: str):
+def load_insta_media(insta_token: str) -> dict:
     print('Loading Instagram media [', end='', flush=True)
 
     next_max_id: str = None
@@ -114,19 +115,20 @@ def load_insta_media(insta_token: str):
 
     all_media: dict = {}
 
-    while next_page:
-        media = get_recent_media(insta_token=insta_token, next_max_id=next_max_id)
-        next_max_id = media['next_max_id']
-        next_page = media['next_page']
-        all_media.update(media['media'])
-        print("#", end="", flush=True)
+    with requests.Session() as session:
+        while next_page:
+            media = get_recent_media(session=session, insta_token=insta_token, next_max_id=next_max_id)
+            next_max_id = media['next_max_id']
+            next_page = media['next_page']
+            all_media.update(media['media'])
+            print("#", end="", flush=True)
 
     print('] [DONE] - Media items size: ', len(all_media))
 
     return all_media
 
 
-def read_insta_media():
+def read_insta_media() -> dict:
     if not os.path.isfile(INSTA_MEDIA_JSON_FILE_NAME):
         raise ValueError("Media has not yet been loaded, file: " + INSTA_MEDIA_JSON_FILE_NAME + " does not exist")
 
@@ -134,14 +136,14 @@ def read_insta_media():
         return json.loads(f.read())
 
 
-def store_insta_media(insta_media_data: dict = None):
+def store_insta_media(insta_media_data: dict = None) -> NoReturn:
     print('Saving media data to file ', end='', flush=True)
     with open(INSTA_MEDIA_JSON_FILE_NAME, "wb") as f:
         f.write(json.dumps(insta_media_data).encode("utf-8"))
     print('[DONE]')
 
 
-def get_recent_media(insta_token: str, next_max_id: str = None):
+def get_recent_media(session: requests.Session, insta_token: str, next_max_id: str = None) -> dict:
     # set count to 2000 to get max data per request
     payload: dict = {
         'access_token': insta_token,
@@ -149,28 +151,106 @@ def get_recent_media(insta_token: str, next_max_id: str = None):
         'count': 2000
     }
 
-    response: dict = requests.get(INSTA_MEDIA_URI, params=payload).json()
+    try:
+        response = session.get(INSTA_MEDIA_URI, params=payload)
+        response.raise_for_status()
 
-    if 'code' in response and response['code'] != 200:
-        raise ValueError("Error while calling Instagram API, error_type: "
-                         + response['error_type'] + ", message: "
-                         + response['error_message'])
+    except requests.exceptions.HTTPError as e:
+        raise ValueError('HTTP error calling Instagram API') from e
+
+    except requests.exceptions.RequestException as e:
+        raise ValueError('Connection error calling Instagram API') from e
+
+    json_response: dict = response.json()
+
+    if 'code' in json_response and json_response['code'] != 200:
+        raise ValueError('Error while calling Instagram API, error_type: '
+                         + json_response['error_type'] + ', message: '
+                         + json_response['error_message'])
 
     media: dict = {}
-    for item in response['data']:
+    for item in json_response['data']:
         media[item['id']] = item
 
-    next_max_id = response['pagination'].get('next_max_id', None)
+    next_max_id = json_response['pagination'].get('next_max_id', None)
 
     return {'next_max_id': next_max_id, 'next_page': next_max_id is not None, 'media': media}
 
 
-def analyze_locations(insta_media_data: dict, location_iq_token: str):
+def analyze_locations(insta_media_data: dict, location_iq_token: str) -> dict:
     print('Analyzing locations ...')
 
-    locations: dict = {}
+    locations: dict = extract_locations_from_media(insta_media_data)
     countries: dict = {}
     cities: dict = {}
+
+    fill_additional_location_data(locations, cities, countries, location_iq_token)
+    store_locations_data(locations, countries, cities)
+
+    return {'locations': locations, 'countries': countries, 'cities': cities}
+
+
+def fill_additional_location_data(locations: dict, cities: dict, countries: dict, location_iq_token: str) -> NoReturn:
+    """Fill additional location data using LocationIQ API.
+
+    Append additional data to locations, fill cities and countries.
+    """
+
+    if location_iq_token is None:
+        print('Skipping additional location data loading, LocationIQ token not set')
+    else:
+        print('Loading additional location data (should take about', len(locations), 'seconds) [', end='', flush=True)
+        with requests.Session() as session:
+            for key in locations:
+                location = locations[key]
+                media_items = location['media_items']
+
+                # Load additional data
+                additional_location_data = load_additional_location_data(
+                    session=session,
+                    location=location,
+                    location_iq_token=location_iq_token)
+
+                # Extract additional data
+                country = additional_location_data['address']['country']
+
+                if 'city' in additional_location_data['address']:
+                    city = additional_location_data['address']['city']
+                elif 'town' in additional_location_data['address']:
+                    city = additional_location_data['address']['town']
+                elif 'village' in additional_location_data['address']:
+                    city = additional_location_data['address']['village']
+                else:
+                    city = 'Other'
+
+                location['additional_data'] = additional_location_data
+
+                # Fill countries
+                if country in countries:
+                    countries[country]['count'] += 1
+                    countries[country]['media_items'] += media_items
+                else:
+                    countries[country] = {
+                        'count': 1,
+                        'media_items': [media_items]
+                    }
+
+                # Fill cities
+                if city in cities:
+                    cities[city]['count'] += 1
+                    cities[city]['media_items'] += media_items
+                else:
+                    cities[city] = {'count': 1, 'media_items': [media_items]}
+
+                # LocationIQ rate limit (1 request per second)
+                print("#", end="", flush=True)
+                time.sleep(1)
+
+        print('] [DONE]')
+
+
+def extract_locations_from_media(insta_media_data: dict) -> dict:
+    locations: dict = {}
 
     for key in insta_media_data.keys():
         media_item = insta_media_data[key]
@@ -198,62 +278,10 @@ def analyze_locations(insta_media_data: dict, location_iq_token: str):
                 ]
                 locations[location_id] = location
 
-    if location_iq_token is not None:
-
-        print('Loading country, city data (should take about', len(locations), 'seconds) [', end='', flush=True)
-        for key in locations:
-
-            location = locations[key]
-            media_items = location['media_items']
-
-            # Load additional data
-            country_data = load_location_data(location=location, location_iq_token=location_iq_token)
-
-            # Extract additional data
-            country = country_data['address']['country']
-
-            if 'city' in country_data['address']:
-                city = country_data['address']['city']
-            elif 'town' in country_data['address']:
-                city = country_data['address']['town']
-            elif 'village' in country_data['address']:
-                city = country_data['address']['village']
-            else:
-                city = 'Other'
-
-            location['additional_data'] = country_data
-
-            # Fill countries
-            if country in countries:
-                countries[country]['count'] += 1
-                countries[country]['media_items'] += media_items
-            else:
-                countries[country] = {
-                    'count': 1,
-                    'media_items': [media_items]
-                }
-
-            # Fill cities
-            if city in cities:
-                cities[city]['count'] += 1
-                cities[city]['media_items'] += media_items
-            else:
-                cities[city] = {
-                    'count': 1,
-                    'media_items': [media_items]
-                }
-
-            # Location IQ rate limit (1 request per second)
-            print("#", end="", flush=True)
-            time.sleep(1)
-
-        print('] [DONE]')
-
-    store_locations_data(locations, countries, cities)
-    return {'locations': locations, 'countries': countries, 'cities': cities}
+    return locations
 
 
-def store_locations_data(locations, countries, cities):
+def store_locations_data(locations, countries, cities) -> NoReturn:
     print('Saving location data to files ', end='', flush=True)
 
     with open(INSTA_LOCATIONS_JSON_FILE_NAME, "wb") as f:
@@ -268,7 +296,7 @@ def store_locations_data(locations, countries, cities):
     print('[DONE]')
 
 
-def print_locations_data(locations, countries, cities):
+def print_locations_data(locations, countries, cities) -> NoReturn:
     # Sort by occurrences
     sorted_locations = sorted(locations.items(), key=lambda i: i[1]['count'], reverse=True)
     sorted_countries = sorted(countries.items(), key=lambda i: i[1]['count'], reverse=True)
@@ -318,7 +346,7 @@ def print_locations_data(locations, countries, cities):
     print(cities_table)
 
 
-def load_location_data(location: dict, location_iq_token: str):
+def load_additional_location_data(session: requests.Session, location: dict, location_iq_token: str) -> dict:
     payload: dict = {
         'key': location_iq_token,
         'lat': location['latitude'],
@@ -326,14 +354,24 @@ def load_location_data(location: dict, location_iq_token: str):
         'format': 'json'
     }
 
-    return requests.get(LOCATION_IQ_URI, params=payload).json()
+    try:
+        response = session.get(LOCATION_IQ_URI, params=payload)
+        response.raise_for_status()
+
+    except requests.exceptions.HTTPError as e:
+        raise ValueError('HTTP error calling LocationIQ API') from e
+
+    except requests.exceptions.RequestException as e:
+        raise ValueError('Connection error calling LocationIQ API') from e
+
+    return response.json()
 
 
 def main():
     analyzer = InstaAnalyzer(
         insta_token='<INSTA_TOKEN_HERE>',
         location_iq_token='<LOCATION_ID_TOKEN_HERE>')
-    analyzer.read_media_from_file = True
+    analyzer.read_media_from_file = False
     analyzer.run()
 
 
