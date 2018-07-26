@@ -2,7 +2,7 @@ import requests
 import json
 import os.path
 import time
-from typing import NoReturn
+from typing import NoReturn, Tuple, Any
 from beautifultable import BeautifulTable
 
 # URIs
@@ -89,10 +89,10 @@ class InstaAnalyzer(object):
         if self._insta_media_data is None:
             raise ValueError("Insta media is not yet loaded, make sure to call load_instagram_media before")
 
-        location_analysis: dict = analyze_locations(self._insta_media_data, self._location_iq_token)
-        self._countries = location_analysis['countries']
-        self._locations = location_analysis['locations']
-        self._cities = location_analysis['cities']
+        locations, countries, cities = analyze_locations(self._insta_media_data, self._location_iq_token)
+        self._countries = countries
+        self._locations = locations
+        self._cities = cities
 
     def print_locations(self):
         """Print location data analysis"""
@@ -117,10 +117,8 @@ def load_insta_media(insta_token: str) -> dict:
 
     with requests.Session() as session:
         while next_page:
-            media = get_recent_media(session=session, insta_token=insta_token, next_max_id=next_max_id)
-            next_max_id = media['next_max_id']
-            next_page = media['next_page']
-            all_media.update(media['media'])
+            next_max_id, next_page, media = get_recent_media(session=session, insta_token=insta_token, next_max_id=next_max_id)
+            all_media.update(media)
             print("#", end="", flush=True)
 
     print('] [DONE] - Media items size: ', len(all_media))
@@ -143,7 +141,7 @@ def store_insta_media(insta_media_data: dict = None) -> NoReturn:
     print('[DONE]')
 
 
-def get_recent_media(session: requests.Session, insta_token: str, next_max_id: str = None) -> dict:
+def get_recent_media(session: requests.Session, insta_token: str, next_max_id: str = None) -> Tuple[Any, Any, dict]:
     # set count to 2000 to get max data per request
     payload: dict = {
         'access_token': insta_token,
@@ -173,11 +171,12 @@ def get_recent_media(session: requests.Session, insta_token: str, next_max_id: s
         media[item['id']] = item
 
     next_max_id = json_response['pagination'].get('next_max_id', None)
+    next_page = next_max_id is not None
 
-    return {'next_max_id': next_max_id, 'next_page': next_max_id is not None, 'media': media}
+    return next_max_id, next_page, media
 
 
-def analyze_locations(insta_media_data: dict, location_iq_token: str) -> dict:
+def analyze_locations(insta_media_data: dict, location_iq_token: str) -> Tuple[dict, dict, dict]:
     print('Analyzing locations ...')
 
     locations: dict = extract_locations_from_media(insta_media_data)
@@ -187,7 +186,7 @@ def analyze_locations(insta_media_data: dict, location_iq_token: str) -> dict:
     fill_additional_location_data(locations, cities, countries, location_iq_token)
     store_locations_data(locations, countries, cities)
 
-    return {'locations': locations, 'countries': countries, 'cities': cities}
+    return locations, countries, cities
 
 
 def fill_additional_location_data(locations: dict, cities: dict, countries: dict, location_iq_token: str) -> NoReturn:
